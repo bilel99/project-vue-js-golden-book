@@ -1,6 +1,7 @@
 <template>
   <div class="album py-5 bg-light">
     <div class="container">
+      <button type="button" class="btn btn-primary col-12" data-toggle="modal" data-target="#createArticleModal">Create New Article</button>
       <div class="row">
 
         <div class="col-md-4" v-for="(post, idx) in posts" v-bind:key="idx">
@@ -12,7 +13,7 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <button type="button" class="btn btn-sm btn-outline-secondary btn-primary" @click="view(post)">View</button>
-                  <button type="button" class="edit-post btn btn-sm btn-outline-secondary btn-warning" @click="edit(post)">Edit</button>
+                  <!--button type="button" class="edit-post btn btn-sm btn-outline-secondary btn-warning">Edit</button-->
                   <button type="button" class="btn btn-sm btn-outline-secondary btn-danger" @click="destroy(post)">Delete</button>
                 </div>
                 <small class="text-muted">Created by {{ post.userId }}</small>
@@ -28,14 +29,19 @@
           </div>
           <!-- Edit Form -->
           <div class="edit-form">
+            <form action="">
+                <div class="form-group">
+                  <label for="title">title</label>
+                  <input type="text" class="form-control" id="title" placeholder="title" v-model="post.title">
+                </div>
+                <div class="form-group">
+                  <label for="body">Description</label>
+                  <textarea class="form-control" id="body" cols="30" rows="10" v-model="post.body"></textarea>
+                </div>
               <div class="form-group">
-                <label for="title">title</label>
-                <input type="text" class="form-control" id="title" placeholder="title" v-model="post.title">
+                <button type="submit" class="form-control btn btn-success" @click.prevent="edit(post)">Update</button>
               </div>
-              <div class="form-group">
-                <label for="body">Description</label>
-                <textarea class="form-control" id="body" cols="30" rows="10" v-model="post.body"></textarea>
-              </div>
+            </form>
           </div>
 
         </div>
@@ -75,7 +81,10 @@ export default {
         title: post.title,
         body: post.body
       }).then((response) => {
-        this.posts = response.data
+        response.json().then((data) => {
+          console.log(data)
+          this.posts = data
+        })
       }, (error) => {
         console.log('error edit form ', error)
       })
